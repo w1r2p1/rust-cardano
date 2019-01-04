@@ -113,24 +113,12 @@ jobs:
       - store_artifacts:
           path: target/coverage-merged
           destination: coverage-merged
+      - store_test_results:
+          path: coverage-merged
       - persist_to_workspace:
           root: "."
           paths:
-            - target/coverage
-  codecov_upload:
-    docker:
-      - image: buildpack-deps:curl
-    working_directory: /mnt/crate
-    steps:
-      # Codecov uploader needs the source and binaries
-      # exactly as everything was during the test run.
-      - checkout
-      - attach_workspace:
-          at: "."
-      - run:
-          name: Upload to Codecov
-          command: bash <(curl -s https://codecov.io/bash)
-
+            - target/coverage-merged
 workflows:
   version: 2
   test_all_and_coverage:
@@ -145,9 +133,3 @@ workflows:
       - test_nightly:
           requires:
             - cargo_fetch
-      - coverage:
-          requires:
-            - test
-      - codecov_upload:
-          requires:
-            - coverage
