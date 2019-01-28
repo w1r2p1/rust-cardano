@@ -347,10 +347,12 @@ impl chain_core::property::Deserialize for Block {
 }
 
 impl chain_core::property::HasTransaction<TxAux> for Block {
-    fn transactions<'a>(&'a self) -> std::slice::Iter<'a, TxAux> {
+    type Transactions = Vec<TxAux>;
+
+    fn transactions(&self) -> Option<&Self::Transactions> {
         match self {
-            &Block::BoundaryBlock(_) => [].iter(),
-            &Block::MainBlock(ref blk) => blk.body.tx.iter(),
+            Block::BoundaryBlock(_) => None,
+            Block::MainBlock(ref blk) => Some(&blk.body.tx),
         }
     }
 }

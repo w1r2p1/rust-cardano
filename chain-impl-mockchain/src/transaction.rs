@@ -86,12 +86,15 @@ pub struct Transaction {
 impl property::Transaction for Transaction {
     type Input = UtxoPointer;
     type Output = Output;
+    type Inputs = Vec<UtxoPointer>;
+    type Outputs = Vec<Output>;
     type Id = TransactionId;
-    fn inputs<'a>(&'a self) -> std::slice::Iter<'a, Self::Input> {
-        self.inputs.iter()
+
+    fn inputs(&self) -> &Self::Inputs {
+        &self.inputs
     }
-    fn outputs<'a>(&'a self) -> std::slice::Iter<'a, Self::Output> {
-        self.outputs.iter()
+    fn outputs(&self) -> &Self::Outputs {
+        &self.outputs
     }
     fn id(&self) -> Self::Id {
         let bytes = bincode::serialize(self).expect("unable to serialize transaction");
@@ -142,11 +145,13 @@ impl property::Deserialize for SignedTransaction {
 impl property::Transaction for SignedTransaction {
     type Input = UtxoPointer;
     type Output = Output;
+    type Inputs = Vec<UtxoPointer>;
+    type Outputs = Vec<Output>;
     type Id = TransactionId;
-    fn inputs<'a>(&'a self) -> std::slice::Iter<'a, Self::Input> {
+    fn inputs(&self) -> &Self::Inputs {
         self.tx.inputs()
     }
-    fn outputs<'a>(&'a self) -> std::slice::Iter<'a, Self::Output> {
+    fn outputs(&self) -> &Self::Outputs {
         self.tx.outputs()
     }
     fn id(&self) -> Self::Id {
