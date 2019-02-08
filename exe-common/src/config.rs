@@ -49,6 +49,7 @@ pub mod net {
     pub enum Peer {
         Native(String),
         Http(String),
+        Ntt(String),
     }
     impl Peer {
         /// analyse the content of the given `addr` and construct the correct kind
@@ -89,6 +90,7 @@ pub mod net {
             match self {
                 &Peer::Native(ref addr) => addr.as_ref(),
                 &Peer::Http(ref addr) => addr.as_ref(),
+                &Peer::Ntt(ref addr) => addr.as_ref(),
             }
         }
         /// test if the `Peer` is a native `Peer`.
@@ -105,6 +107,7 @@ pub mod net {
             match self {
                 &Peer::Native(ref addr) => write!(f, "native: {}", addr),
                 &Peer::Http(ref addr) => write!(f, "http: {}", addr),
+                &Peer::Ntt(ref addr) => write!(f, "ntt: {}", addr),
             }
         }
     }
